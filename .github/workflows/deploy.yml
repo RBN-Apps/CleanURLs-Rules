@@ -4,6 +4,10 @@ on:
     branches:
       - master
   pull_request:
+
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build
@@ -46,6 +50,9 @@ jobs:
           jsonlint-php public/data.minify.json
   deploy:
     name: Deploy
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     needs: test
     steps:
