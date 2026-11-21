@@ -44,6 +44,8 @@ jobs:
         run: |
           jsonlint-php public/data.min.json
           jsonlint-php public/data.minify.json
+          node build_tools/checkRedirectRules.cjs public/data.min.json public/data.minify.json
+          node --test tests/*.test.cjs
   deploy:
     name: Deploy
     runs-on: ubuntu-latest

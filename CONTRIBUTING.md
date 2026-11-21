@@ -52,6 +52,26 @@ Thank you for your interest in contributing to ClearURLs! To keep our codebase s
    - An example URL containing the tracking parameter(s) you intend to remove.
    - (Optional) A brief note on any edge cases or limitations.
 
+## Testing Your Changes
+
+Add declared redirects to `redirectRules` in `data.min.json`. Each entry needs
+a unique ID within its provider. Legacy add-ons continue to read `redirections`
+from the same feed. Run the catalog checks before submitting a change.
+
+```sh
+node build_tools/minifyDataJSON.js data.min.json /tmp/clearurls-data.minify.json
+node build_tools/checkRedirectRules.cjs data.min.json /tmp/clearurls-data.minify.json
+node --test tests/*.test.cjs
+```
+
+The redirect check validates declared rules with the pinned add-on compiler,
+checks capture references against the regex, and verifies that the minified
+feed preserves the declarations and their order.
+
+When the add-on compiler changes, refresh its generated snapshot and digest
+from a sibling `ClearUrls` checkout by running
+`node build_tools/loadRedirectCompiler.cjs --sync` from this repository.
+
 ## Merge Request Size and Organization
 
 - **Keep MRs small and focused.** Aim for fewer than 200 lines of net additions per MR.
