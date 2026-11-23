@@ -37,7 +37,7 @@ function build() {
     const data = JSON.parse(fileContent);
     let minifiedData = {"providers":{}};
 
-    for(let provider in data.providers) {
+    for (const provider of Object.keys(data.providers)) {
         minifiedData.providers[provider] = {};
         let self = minifiedData.providers[provider];
 
@@ -53,24 +53,28 @@ function build() {
             self.urlPattern = data.providers[provider].urlPattern;
         }
 
-        if(data.providers[provider].rules.length !== 0) {
+        if(data.providers[provider].rules && data.providers[provider].rules.length !== 0) {
             self.rules = data.providers[provider].rules;
         }
 
-        if(data.providers[provider].rawRules.length !== 0) {
+        if(data.providers[provider].rawRules && data.providers[provider].rawRules.length !== 0) {
             self.rawRules = data.providers[provider].rawRules;
         }
 
-        if(data.providers[provider].referralMarketing.length !== 0) {
+        if(data.providers[provider].referralMarketing && data.providers[provider].referralMarketing.length !== 0) {
             self.referralMarketing = data.providers[provider].referralMarketing;
         }
 
-        if(data.providers[provider].exceptions.length !== 0) {
+        if(data.providers[provider].exceptions && data.providers[provider].exceptions.length !== 0) {
             self.exceptions = data.providers[provider].exceptions;
         }
 
-        if(data.providers[provider].redirections.length !== 0) {
+        if(data.providers[provider].redirections && data.providers[provider].redirections.length !== 0) {
             self.redirections = data.providers[provider].redirections;
+        }
+
+        if(data.providers[provider].redirectRules && data.providers[provider].redirectRules.length !== 0) {
+            self.redirectRules = data.providers[provider].redirectRules;
         }
 
         if(data.providers[provider].methods && data.providers[provider].methods.length !== 0) {

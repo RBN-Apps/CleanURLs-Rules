@@ -14,18 +14,22 @@ test rules:
   stage: test
   script:
     - jsonlint-php data.min.json
+    - node --test tests/*.test.cjs
   only:
     refs:
       - merge_requests
       - master
     changes:
       - data.min.json
+      - build_tools/**/*
+      - tests/*.test.cjs
 
 hash rules:
   stage: build
   script:
     - sha256sum data.min.json | awk '{print $1}' > rules.min.hash
     - node build_tools/minifyDataJSON.js "data.min.json" "data.minify.json"
+    - node build_tools/checkRedirectRules.cjs "data.min.json" "data.minify.json"
     - sha256sum data.minify.json | awk '{print $1}' > rules.minify.hash
   artifacts:
     paths:
@@ -38,6 +42,7 @@ hash rules:
       - master
     changes:
       - data.min.json
+      - build_tools/**/*
 
 pages:
   stage: deploy
@@ -46,6 +51,7 @@ pages:
     - cp data.min.json public/data.min.json
     - sha256sum public/data.min.json | awk '{print $1}' > public/rules.min.hash
     - node build_tools/minifyDataJSON.js "public/data.min.json" "public/data.minify.json"
+    - node build_tools/checkRedirectRules.cjs "public/data.min.json" "public/data.minify.json"
     - sha256sum public/data.minify.json | awk '{print $1}' > public/rules.minify.hash
     # Support old refs
     - mkdir public/data
